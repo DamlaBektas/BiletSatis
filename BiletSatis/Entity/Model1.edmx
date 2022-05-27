@@ -1,0 +1,365 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="WebProjeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bilet">
+          <Key>
+            <PropertyRef Name="FestivalId" />
+          </Key>
+          <Property Name="BiletId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FestivalId" Type="int" Nullable="false" />
+          <Property Name="Fiyat" Type="int" />
+          <Property Name="BiletTurId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BiletTuru">
+          <Key>
+            <PropertyRef Name="TurId" />
+          </Key>
+          <Property Name="TurId" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="TurAd" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Festival">
+          <Key>
+            <PropertyRef Name="FestivalId" />
+          </Key>
+          <Property Name="FestivalAd" Type="nvarchar" MaxLength="50" />
+          <Property Name="Adres" Type="nvarchar" MaxLength="50" />
+          <Property Name="Tarih" Type="datetime" />
+          <Property Name="FestivalId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="YasSiniri" Type="int" />
+          <Property Name="TurId" Type="int" />
+        </EntityType>
+        <EntityType Name="FestivalTuru">
+          <Key>
+            <PropertyRef Name="FestivalId" />
+          </Key>
+          <Property Name="FestivalAd" Type="nvarchar" MaxLength="50" />
+          <Property Name="FestivalId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KisiBilgi">
+          <Key>
+            <PropertyRef Name="KimlikNo" />
+          </Key>
+          <Property Name="AdSoyad" Type="nvarchar" MaxLength="50" />
+          <Property Name="KimlikNo" Type="int" Nullable="false" />
+          <Property Name="Yas" Type="int" />
+          <Property Name="Mail" Type="nvarchar" MaxLength="50" />
+          <Property Name="Sifre" Type="nvarchar" MaxLength="50" />
+          <Property Name="KullaniciAd" Type="char" MaxLength="10" />
+          <Property Name="YetkiId" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'WebProje.dbo.Satis' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Satis">
+          <Key>
+            <PropertyRef Name="Festival" />
+            <PropertyRef Name="BiletTuru" />
+          </Key>
+          <Property Name="AdSoyad" Type="nvarchar" MaxLength="50" />
+          <Property Name="Festival" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BiletTuru" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Fiyat" Type="int" />
+        </EntityType>
+        <EntityType Name="Yetki">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Yetki" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <Association Name="FK_Bilet_Festival">
+          <End Role="Festival" Type="Self.Festival" Multiplicity="1" />
+          <End Role="Bilet" Type="Self.Bilet" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Festival">
+              <PropertyRef Name="FestivalId" />
+            </Principal>
+            <Dependent Role="Bilet">
+              <PropertyRef Name="FestivalId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bilet_FestivalTuru">
+          <End Role="FestivalTuru" Type="Self.FestivalTuru" Multiplicity="1" />
+          <End Role="Bilet" Type="Self.Bilet" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="FestivalTuru">
+              <PropertyRef Name="FestivalId" />
+            </Principal>
+            <Dependent Role="Bilet">
+              <PropertyRef Name="FestivalId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_KisiBilgi_Yetki">
+          <End Role="Yetki" Type="Self.Yetki" Multiplicity="0..1" />
+          <End Role="KisiBilgi" Type="Self.KisiBilgi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Yetki">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="KisiBilgi">
+              <PropertyRef Name="YetkiId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WebProjeModelStoreContainer">
+          <EntitySet Name="Bilet" EntityType="Self.Bilet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BiletTuru" EntityType="Self.BiletTuru" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Festival" EntityType="Self.Festival" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FestivalTuru" EntityType="Self.FestivalTuru" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KisiBilgi" EntityType="Self.KisiBilgi" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Yetki" EntityType="Self.Yetki" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Satis" EntityType="Self.Satis" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Satis].[AdSoyad] AS [AdSoyad], 
+    [Satis].[Festival] AS [Festival], 
+    [Satis].[BiletTuru] AS [BiletTuru], 
+    [Satis].[Fiyat] AS [Fiyat]
+    FROM [dbo].[Satis] AS [Satis]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Bilet_Festival" Association="Self.FK_Bilet_Festival">
+            <End Role="Festival" EntitySet="Festival" />
+            <End Role="Bilet" EntitySet="Bilet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bilet_FestivalTuru" Association="Self.FK_Bilet_FestivalTuru">
+            <End Role="FestivalTuru" EntitySet="FestivalTuru" />
+            <End Role="Bilet" EntitySet="Bilet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_KisiBilgi_Yetki" Association="Self.FK_KisiBilgi_Yetki">
+            <End Role="Yetki" EntitySet="Yetki" />
+            <End Role="KisiBilgi" EntitySet="KisiBilgi" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WebProjeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Bilet">
+          <Key>
+            <PropertyRef Name="FestivalId" />
+          </Key>
+          <Property Name="BiletId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FestivalId" Type="Int32" Nullable="false" />
+          <Property Name="BiletTurId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Festival" Relationship="Self.FK_Bilet_Festival" FromRole="Bilet" ToRole="Festival" />
+          <NavigationProperty Name="FestivalTuru" Relationship="Self.FK_Bilet_FestivalTuru" FromRole="Bilet" ToRole="FestivalTuru" />
+          <Property Name="Fiyat" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BiletTuru">
+          <Key>
+            <PropertyRef Name="TurId" />
+          </Key>
+          <Property Name="TurId" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="TurAd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Festival">
+          <Key>
+            <PropertyRef Name="FestivalId" />
+          </Key>
+          <Property Name="FestivalAd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Adres" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Tarih" Type="DateTime" Precision="3" />
+          <Property Name="FestivalId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="YasSiniri" Type="Int32" />
+          <Property Name="TurId" Type="Int32" />
+          <NavigationProperty Name="Bilet" Relationship="Self.FK_Bilet_Festival" FromRole="Festival" ToRole="Bilet" />
+        </EntityType>
+        <EntityType Name="FestivalTuru">
+          <Key>
+            <PropertyRef Name="FestivalId" />
+          </Key>
+          <Property Name="FestivalAd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FestivalId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bilet" Relationship="Self.FK_Bilet_FestivalTuru" FromRole="FestivalTuru" ToRole="Bilet" />
+        </EntityType>
+        <EntityType Name="KisiBilgi">
+          <Key>
+            <PropertyRef Name="KimlikNo" />
+          </Key>
+          <Property Name="AdSoyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="KimlikNo" Type="Int32" Nullable="false" />
+          <Property Name="Yas" Type="Int32" />
+          <Property Name="Mail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sifre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="KullaniciAd" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="YetkiId" Type="Int32" />
+          <NavigationProperty Name="Yetki" Relationship="WebProjeModel.FK_KisiBilgi_Yetki" FromRole="KisiBilgi" ToRole="Yetki" />
+        </EntityType>
+        <Association Name="FK_Bilet_Festival">
+          <End Role="Festival" Type="Self.Festival" Multiplicity="1" />
+          <End Role="Bilet" Type="Self.Bilet" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Festival">
+              <PropertyRef Name="FestivalId" />
+            </Principal>
+            <Dependent Role="Bilet">
+              <PropertyRef Name="FestivalId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bilet_FestivalTuru">
+          <End Role="FestivalTuru" Type="Self.FestivalTuru" Multiplicity="1" />
+          <End Role="Bilet" Type="Self.Bilet" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="FestivalTuru">
+              <PropertyRef Name="FestivalId" />
+            </Principal>
+            <Dependent Role="Bilet">
+              <PropertyRef Name="FestivalId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WebProjeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Bilet" EntityType="Self.Bilet" />
+          <EntitySet Name="BiletTuru" EntityType="Self.BiletTuru" />
+          <EntitySet Name="Festival" EntityType="Self.Festival" />
+          <EntitySet Name="FestivalTuru" EntityType="Self.FestivalTuru" />
+          <EntitySet Name="KisiBilgi" EntityType="Self.KisiBilgi" />
+          <AssociationSet Name="FK_Bilet_Festival" Association="Self.FK_Bilet_Festival">
+            <End Role="Festival" EntitySet="Festival" />
+            <End Role="Bilet" EntitySet="Bilet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bilet_FestivalTuru" Association="Self.FK_Bilet_FestivalTuru">
+            <End Role="FestivalTuru" EntitySet="FestivalTuru" />
+            <End Role="Bilet" EntitySet="Bilet" />
+          </AssociationSet>
+          <EntitySet Name="Satis" EntityType="WebProjeModel.Satis" />
+          <EntitySet Name="Yetki" EntityType="WebProjeModel.Yetki" />
+          <AssociationSet Name="FK_KisiBilgi_Yetki" Association="WebProjeModel.FK_KisiBilgi_Yetki">
+            <End Role="Yetki" EntitySet="Yetki" />
+            <End Role="KisiBilgi" EntitySet="KisiBilgi" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Satis">
+          <Key>
+            <PropertyRef Name="Festival" />
+            <PropertyRef Name="BiletTuru" />
+          </Key>
+          <Property Name="AdSoyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Festival" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BiletTuru" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Fiyat" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Yetki">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Yetki1" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="KisiBilgi" Relationship="WebProjeModel.FK_KisiBilgi_Yetki" FromRole="Yetki" ToRole="KisiBilgi" />
+        </EntityType>
+        <Association Name="FK_KisiBilgi_Yetki">
+          <End Type="WebProjeModel.Yetki" Role="Yetki" Multiplicity="0..1" />
+          <End Type="WebProjeModel.KisiBilgi" Role="KisiBilgi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Yetki">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="KisiBilgi">
+              <PropertyRef Name="YetkiId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WebProjeModelStoreContainer" CdmEntityContainer="WebProjeEntities">
+          <EntitySetMapping Name="Bilet">
+            <EntityTypeMapping TypeName="WebProjeModel.Bilet">
+              <MappingFragment StoreEntitySet="Bilet">
+                <ScalarProperty Name="Fiyat" ColumnName="Fiyat" />
+                <ScalarProperty Name="BiletId" ColumnName="BiletId" />
+                <ScalarProperty Name="FestivalId" ColumnName="FestivalId" />
+                <ScalarProperty Name="BiletTurId" ColumnName="BiletTurId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BiletTuru">
+            <EntityTypeMapping TypeName="WebProjeModel.BiletTuru">
+              <MappingFragment StoreEntitySet="BiletTuru">
+                <ScalarProperty Name="TurId" ColumnName="TurId" />
+                <ScalarProperty Name="TurAd" ColumnName="TurAd" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Festival">
+            <EntityTypeMapping TypeName="WebProjeModel.Festival">
+              <MappingFragment StoreEntitySet="Festival">
+                <ScalarProperty Name="FestivalAd" ColumnName="FestivalAd" />
+                <ScalarProperty Name="Adres" ColumnName="Adres" />
+                <ScalarProperty Name="Tarih" ColumnName="Tarih" />
+                <ScalarProperty Name="FestivalId" ColumnName="FestivalId" />
+                <ScalarProperty Name="YasSiniri" ColumnName="YasSiniri" />
+                <ScalarProperty Name="TurId" ColumnName="TurId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FestivalTuru">
+            <EntityTypeMapping TypeName="WebProjeModel.FestivalTuru">
+              <MappingFragment StoreEntitySet="FestivalTuru">
+                <ScalarProperty Name="FestivalAd" ColumnName="FestivalAd" />
+                <ScalarProperty Name="FestivalId" ColumnName="FestivalId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KisiBilgi">
+            <EntityTypeMapping TypeName="WebProjeModel.KisiBilgi">
+              <MappingFragment StoreEntitySet="KisiBilgi">
+                <ScalarProperty Name="YetkiId" ColumnName="YetkiId" />
+                <ScalarProperty Name="KullaniciAd" ColumnName="KullaniciAd" />
+                <ScalarProperty Name="AdSoyad" ColumnName="AdSoyad" />
+                <ScalarProperty Name="KimlikNo" ColumnName="KimlikNo" />
+                <ScalarProperty Name="Yas" ColumnName="Yas" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="Sifre" ColumnName="Sifre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Satis">
+            <EntityTypeMapping TypeName="WebProjeModel.Satis">
+              <MappingFragment StoreEntitySet="Satis">
+                <ScalarProperty Name="Fiyat" ColumnName="Fiyat" />
+                <ScalarProperty Name="BiletTuru" ColumnName="BiletTuru" />
+                <ScalarProperty Name="Festival" ColumnName="Festival" />
+                <ScalarProperty Name="AdSoyad" ColumnName="AdSoyad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Yetki">
+            <EntityTypeMapping TypeName="WebProjeModel.Yetki">
+              <MappingFragment StoreEntitySet="Yetki">
+                <ScalarProperty Name="Yetki1" ColumnName="Yetki" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
